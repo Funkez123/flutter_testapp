@@ -48,7 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
     cards.add(card);
   }
 
-    print(cards.length);
     return cards;
     }
 

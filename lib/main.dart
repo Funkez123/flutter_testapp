@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Onboarding App'),
     );
   }
 }
@@ -40,15 +40,15 @@ class _MyHomePageState extends State<MyHomePage> {
     var data = await rootBundle.loadString('DemoData.json');
     var jsondata =  await jsonDecode(data);  
     
-  List<Card> cards = [];
+  List<Article> articles = [];
 
   for (var i in jsondata){
-    Card card = Card(i["id"],i["title"],i["description_short"],i["description"],i["text"],i["imageURL"]);
+    Article article = Article(i["id"],i["title"],i["description_short"],i["description"],i["text"],i["imageURL"]);
 
-    cards.add(card);
+    articles.add(article);
   }
 
-    return cards;
+    return articles;
     }
 
   @override
@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
         const DrawerHeader(
         decoration: BoxDecoration(
-          color: Colors.blue,
+          color: Colors.blueAccent,
         ),
         child: Text('Drawer Header'),
       ),
@@ -106,8 +106,44 @@ class _MyHomePageState extends State<MyHomePage> {
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index){
 
-                return ListTile(
-                  title: Text(snapshot.data[index].title),
+                return GestureDetector(
+                  onTap: () async{
+                    
+
+                    Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DetailPage(title: snapshot.data[index].title, description:snapshot.data[index].longdesc, imgurl: snapshot.data[index].imgurl, hero_id: "img${snapshot.data[index].id}",)));
+              
+                  },
+                  child: Card(
+                    child:Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Hero(
+                              tag : "img${snapshot.data[index].id}",
+                              child: Image.network(snapshot.data[index].imgurl)),
+                            Align(
+                              alignment: Alignment(-1,0),
+                              child: Text(snapshot.data[index].title,style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold), )),
+                              Divider(
+                                thickness: 1,
+                              ),
+                              Align(
+                              alignment: Alignment(-1,0),
+                              child: Text(snapshot.data[index].shortdesc,style: TextStyle(fontSize: 22), )),
+                              
+                          ],
+                
+                
+                        )
+                      ),
+                    ) 
+                    
+                    
+                    
+                  ),
                 );
 
               }
@@ -123,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 
-class Card {
+class Article {
   final int id;
   final String title;
   final String shortdesc;
@@ -131,6 +167,46 @@ class Card {
   final String text;
   final String imgurl;
 
-  Card(this.id, this.title, this.shortdesc, this.longdesc, this.text, this.imgurl);
+  Article(this.id, this.title, this.shortdesc, this.longdesc, this.text, this.imgurl);
 
+}
+
+
+class DetailPage extends StatelessWidget {
+  const DetailPage({super.key, required this.title, required this.description, required this.imgurl, required this.hero_id});
+
+  final String title;
+  final String description;
+  final String imgurl;
+  final String hero_id;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+    
+        children: [
+          SizedBox(
+            height:30
+          ),
+
+          Hero(
+            tag : hero_id,
+            child: Image.network(imgurl)),
+
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Align(
+                alignment: Alignment(-1,0),
+                child: Text(title, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+            ),
+
+            Padding(padding: EdgeInsets.only(left: 20, right: 20),
+            child: Text(description, style: TextStyle(fontSize: 18))
+            )
+          
+        ],
+      ),
+    );
+  }
 }

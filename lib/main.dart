@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:async';
-
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:onboarding/page-two.dart';
+
 
 void main() async{
   runApp(const MyApp());
@@ -69,17 +70,18 @@ class _MyHomePageState extends State<MyHomePage> {
       ListTile(
         title: const Text('Overview'),
         onTap: () {
-          // Update the state of the app.
-          // ...
-          
+          Navigator.pop(context);
+
         },
       ),
 
       ListTile(
         title: const Text('Item 2'),
         onTap: () {
-          // Update the state of the app.
-          // ...
+          
+          //Navigator.pop(context);
+          Navigator.push(context,
+          MaterialPageRoute(builder:(context) => secondpage()));
         },
       ),
           ],
@@ -116,6 +118,8 @@ class _MyHomePageState extends State<MyHomePage> {
               
                   },
                   child: Card(
+                    
+                    elevation: 2,
                     child:Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Container(
@@ -126,13 +130,19 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Image.network(snapshot.data[index].imgurl)),
                             Align(
                               alignment: Alignment(-1,0),
-                              child: Text(snapshot.data[index].title,style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold), )),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(snapshot.data[index].title,style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold), ),
+                              )),
                               Divider(
                                 thickness: 1,
                               ),
                               Align(
                               alignment: Alignment(-1,0),
-                              child: Text(snapshot.data[index].shortdesc,style: TextStyle(fontSize: 22), )),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(snapshot.data[index].shortdesc,style: TextStyle(fontSize: 22), ),
+                              )),
                               
                           ],
                 

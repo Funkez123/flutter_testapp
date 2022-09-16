@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:onboarding/page-two.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
+import 'package:http/http.dart' as http;
+
 
 void main() async {
   runApp(const MyApp());
@@ -198,6 +204,26 @@ class DetailPage extends StatelessWidget {
               child: Text(description, style: TextStyle(fontSize: 18)))
         ],
       ),
+
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async{
+
+          final url = Uri.parse(imgurl);
+          final response = await http.get(url);  
+          final bytes = response.bodyBytes;
+          final temp = await getTemporaryDirectory();
+          final path = '${temp.path}/image.jpg';
+          File(path).writeAsBytesSync(bytes);
+
+          await Share.shareFiles([path], text: title);
+
+          // Add your onPressed code here!
+        },
+        backgroundColor: Colors.blueAccent,
+        child: const Icon(Icons.share),
+      ),
+      
     );
   }
 }

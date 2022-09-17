@@ -7,7 +7,7 @@ class secondpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      backgroundColor: Colors.grey.shade100,
       body: Container(child:Center(child: Text("ich bin eine Zweite seite")))
     );
   }

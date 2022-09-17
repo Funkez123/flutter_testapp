@@ -8,9 +8,10 @@ import 'package:onboarding/page-two.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:hive/hive.dart';
 
 void main() async {
+  var favbox = Hive.box('favBox');
   runApp(const MyApp());
 }
 

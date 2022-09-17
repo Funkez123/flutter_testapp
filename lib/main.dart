@@ -9,9 +9,19 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 import 'package:http/http.dart' as http;
 import 'package:hive/hive.dart';
+import 'package:flutter/services.dart';
+
+
 
 void main() async {
-  var favbox = Hive.box('favBox');
+ // var favbox = Hive.box('favBox');
+
+
+
+ WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // transparent status bar
+  ));
   runApp(const MyApp());
 }
 
@@ -188,21 +198,26 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(height: 30),
-          Hero(tag: hero_id, child: Image.network(imgurl)),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Align(
-                alignment: Alignment(-1, 0),
-                child: Text(title,
-                    style:
-                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+      body: CustomScrollView(
+
+        slivers: [
+          
+          SliverToBoxAdapter(child: Hero(tag: hero_id, child: Image.network(imgurl))),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Align(
+                  alignment: Alignment(-1, 0),
+                  child: Text(title,
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+            ),
           ),
-          Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: Text(description, style: TextStyle(fontSize: 18)))
+          SliverToBoxAdapter(
+            child: Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Text(description, style: TextStyle(fontSize: 18))),
+          )
         ],
       ),
 

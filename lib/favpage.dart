@@ -13,7 +13,10 @@ class _favpageState extends State<favpage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      body: Container(),
+      body: Container(
+
+        
+      ),
     );
   }
 }

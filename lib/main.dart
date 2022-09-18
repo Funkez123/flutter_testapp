@@ -184,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
                                             snapshot.data[index].shortdesc,
-                                            style: TextStyle(fontSize: 22),
+                                            style: TextStyle(fontSize: 18),
                                           ),
                                         )),
                                   ],

@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class favpage extends StatefulWidget {
@@ -11,20 +13,46 @@ class favpage extends StatefulWidget {
 
 late var boxlength = 0;
 
-Future<void> getFav() async{
-  var favbox = await Hive.openBox('favBox');
-  boxlength = favbox.length;
-}
 
+  Future<List> getJsonAndBoxes() async {
+      Hive.initFlutter();
+      var favbox = await Hive.openBox('favBox');
+      boxlength = favbox.get("favorites").length;
+
+    var data = await rootBundle.loadString('DemoData.json');
+    var jsondata = await jsonDecode(data);
+
+    List<Article> articles = [];
+
+    for (var i in jsondata) {
+      Article article = Article(i["id"], i["title"], i["description_short"],
+          i["description"], i["text"], i["imageURL"]);
+
+      articles.add(article);
+    }
+
+    return articles;
+  }
+
+  Future<List> getFavId() async{
+
+    Hive.initFlutter();
+    
+    var favbox = await Hive.openBox('favBox');
+    List fav_array = favbox.get("favorites");
+
+    return fav_array;
+    
+  }
 
 class _favpageState extends State<favpage> {
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: FutureBuilder(
-        future: getFav(),
-        
+        future: getJsonAndBoxes(),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) { return ListView.builder(itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             onTap: () {
@@ -32,7 +60,18 @@ class _favpageState extends State<favpage> {
             },
             child: Card(
               child: Container(
-                
+                child: FutureBuilder(
+                  future: getFavId(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    
+                    if (snapshot.data == null) {
+                  return Container(child: Center(child: Text("Loading")));
+                } else {
+                    
+                     return Container(
+                  color: Colors.white,
+                  child: Center(child:Text(snapshot.data.toString())),
+                );}}),
                 height: 200),
             )
           );
@@ -46,3 +85,14 @@ class _favpageState extends State<favpage> {
   }
 }
 
+class Article {
+  final int id;
+  final String title;
+  final String shortdesc;
+  final String longdesc;
+  final String text;
+  final String imgurl;
+
+  Article(this.id, this.title, this.shortdesc, this.longdesc, this.text,
+      this.imgurl);
+}

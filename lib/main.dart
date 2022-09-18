@@ -8,17 +8,16 @@ import 'package:onboarding/page-two.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 import 'package:http/http.dart' as http;
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/services.dart';
+import 'favpage.dart';
 
+Future<void> main() async {
+ 
 
-
-void main() async {
- // var favbox = Hive.box('favBox');
-
-
-
- WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  var favbox = await Hive.openBox('favBox');
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // transparent status bar
   ));
@@ -50,7 +49,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late List data;
-
+  
   Future<List> getJson() async {
     var data = await rootBundle.loadString('DemoData.json');
     var jsondata = await jsonDecode(data);
@@ -88,6 +87,14 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           ListTile(
+            title: const Text('Favoriten'),
+            onTap: () {
+              //Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => favpage()));
+            },
+          ),
+          ListTile(
             title: const Text('Item 2'),
             onTap: () {
               //Navigator.pop(context);
@@ -117,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => DetailPage(
+                                          id: snapshot.data[index].id,
                                           title: snapshot.data[index].title,
                                           description:
                                               snapshot.data[index].longdesc,
@@ -135,7 +143,27 @@ class _MyHomePageState extends State<MyHomePage> {
                                     Hero(
                                         tag: "img${snapshot.data[index].id}",
                                         child: Image.network(
-                                            snapshot.data[index].imgurl)),
+                                          snapshot.data[index].imgurl,
+                                          loadingBuilder: (BuildContext context,
+                                              Widget child,
+                                              ImageChunkEvent?
+                                                  loadingProgress) {
+                                            if (loadingProgress == null)
+                                              return child;
+                                            return Center(
+                                              child: CircularProgressIndicator(
+                                                value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes!
+                                                    : null,
+                                              ),
+                                            );
+                                          },
+                                        )),
                                     Align(
                                         alignment: Alignment(-1, 0),
                                         child: Padding(
@@ -185,6 +213,7 @@ class Article {
 class DetailPage extends StatelessWidget {
   const DetailPage(
       {super.key,
+      required this.id,
       required this.title,
       required this.description,
       required this.imgurl,
@@ -194,39 +223,83 @@ class DetailPage extends StatelessWidget {
   final String description;
   final String imgurl;
   final String hero_id;
+  final int id;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
-
         slivers: [
-          
-          SliverToBoxAdapter(child: Hero(tag: hero_id, child: Image.network(imgurl))),
+          SliverToBoxAdapter(
+              child: Hero(
+                  tag: hero_id,
+                  child: Image.network(
+                    imgurl,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
+                        ),
+                      );
+                    },
+                  ))),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Align(
                   alignment: Alignment(-1, 0),
                   child: Text(title,
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+                      style: TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold))),
             ),
           ),
           SliverToBoxAdapter(
             child: Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: Text(description, style: TextStyle(fontSize: 18))),
+          ),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: ElevatedButton(
+                onPressed: () async{ 
+                  Hive.initFlutter();
+                  var favbox = await Hive.openBox('favBox');
+                  if(favbox.containsKey("favorites")!= true){
+                    List<int> emptylist = [];
+                    await favbox.put("favorites", emptylist);
+                  }
+                  var fav_array = await favbox.get("favorites");
+                  if(fav_array.contains(id)==false){
+                    await fav_array.add(id);
+                  }
+                  else{
+                    await fav_array.remove(id);
+                  }
+                  await favbox.put("favorites", fav_array);
+                 },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Gefällt mir"),
+                    Icon(Icons.favorite)
+                  ],
+                ),
+              ),
+            )
           )
         ],
       ),
-
-
       floatingActionButton: FloatingActionButton(
-        onPressed: () async{
-
+        onPressed: () async {
           final url = Uri.parse(imgurl);
-          final response = await http.get(url);  
+          final response = await http.get(url);
           final bytes = response.bodyBytes;
           final temp = await getTemporaryDirectory();
           final path = '${temp.path}/image.jpg';
@@ -239,7 +312,6 @@ class DetailPage extends StatelessWidget {
         backgroundColor: Colors.blueAccent,
         child: const Icon(Icons.share),
       ),
-      
     );
   }
 }

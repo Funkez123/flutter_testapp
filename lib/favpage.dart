@@ -12,7 +12,7 @@ class favpage extends StatefulWidget {
 }
 
 late var boxlength = 0;
-
+late var articles;
 
   Future<List> getJsonAndBoxes() async {
       Hive.initFlutter();
@@ -53,7 +53,10 @@ class _favpageState extends State<favpage> {
       backgroundColor: Colors.grey.shade100,
       body: FutureBuilder(
         future: getJsonAndBoxes(),
-        builder: (BuildContext context, AsyncSnapshot<void> snapshot) { return ListView.builder(itemBuilder: (BuildContext context, int index) {
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          
+          articles = getJsonAndBoxes();
+          return ListView.builder(itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             onTap: () {
               print("you pressed ${index}");
@@ -68,9 +71,10 @@ class _favpageState extends State<favpage> {
                   return Container(child: Center(child: Text("Loading")));
                 } else {
                     
+                     
                      return Container(
                   color: Colors.white,
-                  child: Center(child:Text(snapshot.data.toString())),
+                  child: Center(child:Text(articles.toString())),
                 );}}),
                 height: 200),
             )

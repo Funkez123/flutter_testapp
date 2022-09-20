@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'main.dart';
 
 class favpage extends StatefulWidget {
   const favpage(
@@ -11,13 +12,12 @@ class favpage extends StatefulWidget {
   State<favpage> createState() => _favpageState();
 }
 
-late var boxlength = 0;
+var boxlength = 0;
 late var articles;
 
-  Future<List> getJsonAndBoxes() async {
-      Hive.initFlutter();
-      var favbox = await Hive.openBox('favBox');
-      boxlength = favbox.get("favorites").length;
+
+Future<List> getJson() async {
+
 
     var data = await rootBundle.loadString('DemoData.json');
     var jsondata = await jsonDecode(data);
@@ -37,8 +37,9 @@ late var articles;
   Future<List> getFavId() async{
 
     Hive.initFlutter();
-    
     var favbox = await Hive.openBox('favBox');
+    boxlength = favbox.get("favorites").length;
+
     List fav_array = favbox.get("favorites");
 
     return fav_array;
@@ -52,16 +53,15 @@ class _favpageState extends State<favpage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: FutureBuilder(
-        future: getJsonAndBoxes(),
+        future: getFavId(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          
-          articles = getJsonAndBoxes();
           return ListView.builder(itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             onTap: () {
-              print("you pressed ${index}");
+              print("you pressed ${snapshot.data[index]}");
             },
             child: Card(
+              elevation: 2,
               child: Container(
                 child: FutureBuilder(
                   future: getFavId(),
@@ -72,11 +72,69 @@ class _favpageState extends State<favpage> {
                 } else {
                     
                      
-                     return Container(
-                  color: Colors.white,
-                  child: Center(child:Text(articles.toString())),
-                );}}),
-                height: 200),
+                     return FutureBuilder(
+              future: getJson(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.data == null) {
+                  return Container(child: Center(child: Text("Loading")));
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                                    children: [
+                                      Hero(
+                                          tag: "img${snapshot.data[index].id}",
+                                          child: Image.network(
+                                            snapshot.data[index].imgurl,
+                                            loadingBuilder: (BuildContext context,
+                                                Widget child,
+                                                ImageChunkEvent?
+                                                    loadingProgress) {
+                                              if (loadingProgress == null)
+                                                return child;
+                                              return Center(
+                                                child: CircularProgressIndicator(
+                                                  value: loadingProgress
+                                                              .expectedTotalBytes !=
+                                                          null
+                                                      ? loadingProgress
+                                                              .cumulativeBytesLoaded /
+                                                          loadingProgress
+                                                              .expectedTotalBytes!
+                                                      : null,
+                                                ),
+                                              );
+                                            },
+                                          )),
+                                      Align(
+                                          alignment: Alignment(-1, 0),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              snapshot.data[index].title,
+                                              style: TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          )),
+                                      Divider(
+                                        thickness: 1,
+                                      ),
+                                      Align(
+                                          alignment: Alignment(-1, 0),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              snapshot.data[index].shortdesc,
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          )),
+                                    ],
+                                  ),
+                  );
+                }
+              });}}),
+                ),
             )
           );
           },

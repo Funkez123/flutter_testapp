@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
       ),
       home: const MyHomePage(title: 'Onboarding App'),
     );
@@ -68,14 +68,14 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.blueGrey[100],
       drawer: Drawer(
           child: ListView(
         padding: EdgeInsets.zero,
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blueAccent,
+              color: Color.fromARGB(255, 216, 215, 255),
             ),
             child: Text('Drawer Header'),
           ),
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       )),
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        
         title: Text(widget.title),
       ),
       body: FutureBuilder(
@@ -132,6 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     )));
                       },
                       child: Card(
+                        color: Colors.white,
                           elevation: 2,
                           child: Padding(
                             padding: const EdgeInsets.all(20.0),
@@ -306,7 +307,7 @@ class DetailPage extends StatelessWidget {
 
           // Add your onPressed code here!
         },
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.blueGrey,
         child: const Icon(Icons.share),
       ),
     );

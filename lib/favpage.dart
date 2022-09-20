@@ -14,7 +14,7 @@ class favpage extends StatefulWidget {
 
 var boxlength = 0;
 late var articles;
-
+late List future_fav_array;
 
 Future<List> getJson() async {
 
@@ -39,9 +39,8 @@ Future<List> getJson() async {
     Hive.initFlutter();
     var favbox = await Hive.openBox('favBox');
     boxlength = favbox.get("favorites").length;
-
     List fav_array = favbox.get("favorites");
-
+    future_fav_array = fav_array;
     return fav_array;
     
   }
@@ -56,86 +55,79 @@ class _favpageState extends State<favpage> {
         future: getFavId(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return ListView.builder(itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () {
-              print("you pressed ${snapshot.data[index]}");
-            },
-            child: Card(
-              elevation: 2,
-              child: Container(
-                child: FutureBuilder(
-                  future: getFavId(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    
-                    if (snapshot.data == null) {
-                  return Container(child: Center(child: Text("Loading")));
-                } else {
-                    
-                     
-                     return FutureBuilder(
-              future: getJson(),
+          return Card(
+            elevation: 2,
+            child: FutureBuilder(
+              future: getFavId(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
+                
                 if (snapshot.data == null) {
-                  return Container(child: Center(child: Text("Loading")));
-                } else {
-                  return Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                                    children: [
-                                      Hero(
-                                          tag: "img${snapshot.data[index].id}",
-                                          child: Image.network(
-                                            snapshot.data[index].imgurl,
-                                            loadingBuilder: (BuildContext context,
-                                                Widget child,
-                                                ImageChunkEvent?
-                                                    loadingProgress) {
-                                              if (loadingProgress == null)
-                                                return child;
-                                              return Center(
-                                                child: CircularProgressIndicator(
-                                                  value: loadingProgress
-                                                              .expectedTotalBytes !=
-                                                          null
-                                                      ? loadingProgress
-                                                              .cumulativeBytesLoaded /
-                                                          loadingProgress
-                                                              .expectedTotalBytes!
-                                                      : null,
-                                                ),
-                                              );
-                                            },
-                                          )),
-                                      Align(
-                                          alignment: Alignment(-1, 0),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              snapshot.data[index].title,
-                                              style: TextStyle(
-                                                  fontSize: 22,
-                                                  fontWeight: FontWeight.bold),
+              return const Center(child: Text("Loading"));
+            } else {
+                
+                 
+                 return FutureBuilder(
+            future: getJson(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.data == null || future_fav_array == []) {
+              return const Center(child: Text("Loading"));
+            } else {
+              return Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                                children: [
+                                  Hero(
+                                      tag: "img${snapshot.data[index].id}",
+                                      child: Image.network(
+                                        snapshot.data[future_fav_array[index]-1].imgurl,
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent?
+                                                loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value: loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                  : null,
                                             ),
-                                          )),
-                                      Divider(
-                                        thickness: 1,
-                                      ),
-                                      Align(
-                                          alignment: Alignment(-1, 0),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              snapshot.data[index].shortdesc,
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                          )),
-                                    ],
+                                          );
+                                        },
+                                      )),
+                                  Align(
+                                      alignment: Alignment(-1, 0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          snapshot.data[index].title,
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )),
+                                  Divider(
+                                    thickness: 1,
                                   ),
-                  );
-                }
-              });}}),
-                ),
-            )
+                                  Align(
+                                      alignment: Alignment(-1, 0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          snapshot.data[index].shortdesc,
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                      )),
+                                ],
+                              ),
+              );
+            }
+            });}}),
           );
           },
       

@@ -12,7 +12,21 @@ class NewArticlePageState extends State<NewArticlePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      body: Column(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+        children: const [
+          TextField(
+ decoration: const InputDecoration(
+    border: UnderlineInputBorder(),
+    labelText: 'Enter your username',)
+
+          )
+        ],
+
+
+
+      ),
     );
   }
 }

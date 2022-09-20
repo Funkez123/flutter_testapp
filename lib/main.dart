@@ -13,8 +13,6 @@ import 'package:flutter/services.dart';
 import 'favpage.dart';
 
 Future<void> main() async {
- 
-
   await Hive.initFlutter();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -48,7 +46,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late List data;
-  
+
   Future<List> getJson() async {
     var data = await rootBundle.loadString('DemoData.json');
     var jsondata = await jsonDecode(data);
@@ -94,6 +92,14 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           ListTile(
+            title: const Text('Artikel erstellen'),
+            onTap: () {
+              //Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const secondpage()));
+            },
+          ),
+          ListTile(
             title: const Text('Item 2'),
             onTap: () {
               //Navigator.pop(context);
@@ -104,7 +110,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       )),
       appBar: AppBar(
-        
         title: Text(widget.title),
       ),
       body: FutureBuilder(
@@ -127,64 +132,62 @@ class _MyHomePageState extends State<MyHomePage> {
                                       description:
                                           snapshot.data[index].longdesc,
                                       imgurl: snapshot.data[index].imgurl,
-                                      hero_id:
-                                          "img${snapshot.data[index].id}",
+                                      hero_id: "img${snapshot.data[index].id}",
                                     )));
                       },
                       child: Card(
-                        color: Colors.white,
+                          color: Colors.white,
                           elevation: 2,
                           child: Padding(
                             padding: const EdgeInsets.all(20.0),
                             child: Column(
                               children: [
-                            Hero(
-                                tag: "img${snapshot.data[index].id}",
-                                child: Image.network(
-                                  snapshot.data[index].imgurl,
-                                  loadingBuilder: (BuildContext context,
-                                      Widget child,
-                                      ImageChunkEvent?
-                                          loadingProgress) {
-                                    if (loadingProgress == null)
-                                      return child;
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                loadingProgress
-                                                    .expectedTotalBytes!
-                                            : null,
+                                Hero(
+                                    tag: "img${snapshot.data[index].id}",
+                                    child: Image.network(
+                                      snapshot.data[index].imgurl,
+                                      loadingBuilder: (BuildContext context,
+                                          Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        );
+                                      },
+                                    )),
+                                Align(
+                                    alignment: const Alignment(-1, 0),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        snapshot.data[index].title,
+                                        style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    );
-                                  },
-                                )),
-                            Align(
-                                alignment: const Alignment(-1, 0),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    snapshot.data[index].title,
-                                    style: const TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                )),
-                            const Divider(
-                              thickness: 1,
-                            ),
-                            Align(
-                                alignment: const Alignment(-1, 0),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    snapshot.data[index].shortdesc,
-                                    style: const TextStyle(fontSize: 18),
-                                  ),
-                                )),
+                                    )),
+                                const Divider(
+                                  thickness: 1,
+                                ),
+                                Align(
+                                    alignment: const Alignment(-1, 0),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        snapshot.data[index].shortdesc,
+                                        style: const TextStyle(fontSize: 18),
+                                      ),
+                                    )),
                               ],
                             ),
                           )),
@@ -261,37 +264,31 @@ class DetailPage extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Text(description, style: const TextStyle(fontSize: 18))),
           ),
-
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: ElevatedButton(
-                onPressed: () async{ 
-                  Hive.initFlutter();
-                  var favbox = await Hive.openBox('favBox');
-                  if(favbox.containsKey("favorites")!= true){
-                    List<int> emptylist = [];
-                    await favbox.put("favorites", emptylist);
-                  }
-                  var fav_array = await favbox.get("favorites");
-                  if(fav_array.contains(id)==false){
-                    await fav_array.add(id);
-                  }
-                  else{
-                    await fav_array.remove(id);
-                  }
-                  await favbox.put("favorites", fav_array);
-                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text("Gefällt mir"),
-                    Icon(Icons.favorite)
-                  ],
-                ),
+              child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: ElevatedButton(
+              onPressed: () async {
+                Hive.initFlutter();
+                var favbox = await Hive.openBox('favBox');
+                if (favbox.containsKey("favorites") != true) {
+                  List<int> emptylist = [];
+                  await favbox.put("favorites", emptylist);
+                }
+                var fav_array = await favbox.get("favorites");
+                if (fav_array.contains(id) == false) {
+                  await fav_array.add(id);
+                } else {
+                  await fav_array.remove(id);
+                }
+                await favbox.put("favorites", fav_array);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [Text("Gefällt mir"), Icon(Icons.favorite)],
               ),
-            )
-          )
+            ),
+          ))
         ],
       ),
       floatingActionButton: FloatingActionButton(

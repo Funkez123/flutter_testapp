@@ -16,7 +16,6 @@ Future<void> main() async {
  
 
   await Hive.initFlutter();
-  var favbox = await Hive.openBox('favBox');
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // transparent status bar
@@ -91,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () {
               //Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => favpage()));
+                  MaterialPageRoute(builder: (context) => const favpage()));
             },
           ),
           ListTile(
@@ -99,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () {
               //Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => secondpage()));
+                  MaterialPageRoute(builder: (context) => const secondpage()));
             },
           ),
         ],
@@ -108,91 +107,90 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.blueAccent,
         title: Text(widget.title),
       ),
-      body: Container(
-          child: FutureBuilder(
-              future: getJson(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.data == null) {
-                  return Container(child: Center(child: Text("Loading")));
-                } else {
-                  return ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () async {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DetailPage(
-                                          id: snapshot.data[index].id,
-                                          title: snapshot.data[index].title,
-                                          description:
-                                              snapshot.data[index].longdesc,
-                                          imgurl: snapshot.data[index].imgurl,
-                                          hero_id:
-                                              "img${snapshot.data[index].id}",
-                                        )));
-                          },
-                          child: Card(
-                              elevation: 2,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  children: [
-                                Hero(
-                                    tag: "img${snapshot.data[index].id}",
-                                    child: Image.network(
-                                      snapshot.data[index].imgurl,
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent?
-                                              loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                                : null,
-                                          ),
-                                        );
-                                      },
-                                    )),
-                                Align(
-                                    alignment: Alignment(-1, 0),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        snapshot.data[index].title,
-                                        style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold),
+      body: FutureBuilder(
+          future: getJson(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.data == null) {
+              return const Center(child: Text("Loading"));
+            } else {
+              return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DetailPage(
+                                      id: snapshot.data[index].id,
+                                      title: snapshot.data[index].title,
+                                      description:
+                                          snapshot.data[index].longdesc,
+                                      imgurl: snapshot.data[index].imgurl,
+                                      hero_id:
+                                          "img${snapshot.data[index].id}",
+                                    )));
+                      },
+                      child: Card(
+                          elevation: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              children: [
+                            Hero(
+                                tag: "img${snapshot.data[index].id}",
+                                child: Image.network(
+                                  snapshot.data[index].imgurl,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent?
+                                          loadingProgress) {
+                                    if (loadingProgress == null)
+                                      return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
+                                            : null,
                                       ),
-                                    )),
-                                Divider(
-                                  thickness: 1,
-                                ),
-                                Align(
-                                    alignment: Alignment(-1, 0),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        snapshot.data[index].shortdesc,
-                                        style: TextStyle(fontSize: 18),
-                                      ),
-                                    )),
-                                  ],
-                                ),
-                              )),
-                        );
-                      });
-                }
-              })),
+                                    );
+                                  },
+                                )),
+                            Align(
+                                alignment: const Alignment(-1, 0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    snapshot.data[index].title,
+                                    style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )),
+                            const Divider(
+                              thickness: 1,
+                            ),
+                            Align(
+                                alignment: const Alignment(-1, 0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    snapshot.data[index].shortdesc,
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
+                                )),
+                              ],
+                            ),
+                          )),
+                    );
+                  });
+            }
+          }),
     );
   }
 }
@@ -251,16 +249,16 @@ class DetailPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Align(
-                  alignment: Alignment(-1, 0),
+                  alignment: const Alignment(-1, 0),
                   child: Text(title,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 24, fontWeight: FontWeight.bold))),
             ),
           ),
           SliverToBoxAdapter(
             child: Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: Text(description, style: TextStyle(fontSize: 18))),
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Text(description, style: const TextStyle(fontSize: 18))),
           ),
 
           SliverToBoxAdapter(
@@ -285,7 +283,7 @@ class DetailPage extends StatelessWidget {
                  },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: const [
                     Text("Gefällt mir"),
                     Icon(Icons.favorite)
                   ],

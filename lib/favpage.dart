@@ -61,7 +61,7 @@ class _favpageState extends State<favpage> {
               future: getJson(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.data == null) {
-                  return Container(child: Center(child: Text("Loading")));
+                  return const Center(child: Text("Loading"));
                 } else {
                   return ListView.builder(
                       itemCount: snapshot.data.length,
@@ -112,26 +112,26 @@ class _favpageState extends State<favpage> {
                                       },
                                     )),
                                 Align(
-                                    alignment: Alignment(-1, 0),
+                                    alignment: const Alignment(-1, 0),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
                                         snapshot.data[index].title,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 22,
                                             fontWeight: FontWeight.bold),
                                       ),
                                     )),
-                                Divider(
+                                const Divider(
                                   thickness: 1,
                                 ),
                                 Align(
-                                    alignment: Alignment(-1, 0),
+                                    alignment: const Alignment(-1, 0),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
                                         snapshot.data[index].shortdesc,
-                                        style: TextStyle(fontSize: 18),
+                                        style: const TextStyle(fontSize: 18),
                                       ),
                                     )),
                                   ],

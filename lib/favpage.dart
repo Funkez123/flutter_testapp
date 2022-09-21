@@ -76,6 +76,7 @@ class _favpageState extends State<favpage> {
                                           title: snapshot.data[index].title,
                                           description:
                                               snapshot.data[index].longdesc,
+                                          text: snapshot.data[index].text,
                                           imgurl: snapshot.data[index].imgurl,
                                           hero_id:
                                               "img${snapshot.data[index].id}",

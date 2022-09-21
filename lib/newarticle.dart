@@ -14,8 +14,8 @@ class NewArticlePageState extends State<NewArticlePage> {
       backgroundColor: Colors.grey.shade100,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: ListView(children: const [
-          Card(
+        child: ListView(children: [
+          const Card(
               child: Padding(
             padding: EdgeInsets.all(8.0),
             child: Center(
@@ -24,7 +24,7 @@ class NewArticlePageState extends State<NewArticlePage> {
               style: TextStyle(fontSize: 54, fontWeight: FontWeight.bold),
             )),
           )),
-          Card(
+          const Card(
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: TextField(
@@ -34,7 +34,7 @@ class NewArticlePageState extends State<NewArticlePage> {
               )),
             ),
           ),
-          Card(
+          const Card(
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: TextField(
@@ -44,7 +44,7 @@ class NewArticlePageState extends State<NewArticlePage> {
               )),
             ),
           ),
-          Card(
+          const Card(
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: TextField(
@@ -54,7 +54,7 @@ class NewArticlePageState extends State<NewArticlePage> {
               )),
             ),
           ),
-          Card(
+          const Card(
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: TextField(
@@ -64,7 +64,7 @@ class NewArticlePageState extends State<NewArticlePage> {
               )),
             ),
           ),
-          Card(
+          const Card(
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: TextField(
@@ -74,6 +74,11 @@ class NewArticlePageState extends State<NewArticlePage> {
               )),
             ),
           ),
+          Padding(
+            padding: EdgeInsets.all(8),
+              child: TextButton(
+                  style : TextButton.styleFrom(backgroundColor: Colors.black),
+                  onPressed: () {}, child: Text("Artikel veröffentlichen",style: TextStyle(color: Colors.white))))
         ]),
       ),
     );

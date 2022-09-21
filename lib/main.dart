@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
@@ -74,9 +75,15 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 216, 215, 255),
+              color: Color.fromARGB(255, 0, 0, 0),
             ),
-            child: Text('Drawer Header'),
+            child: Text(
+              'Onboarding App',
+              style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
           ),
           ListTile(
             title: const Text('Overview'),
@@ -96,8 +103,10 @@ class _MyHomePageState extends State<MyHomePage> {
             title: const Text('Artikel erstellen'),
             onTap: () {
               //Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const NewArticlePage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const NewArticlePage()));
             },
           ),
           ListTile(
@@ -111,6 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       )),
       appBar: AppBar(
+        backgroundColor: Colors.black54,
         title: Text(widget.title),
       ),
       body: FutureBuilder(
@@ -132,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       title: snapshot.data[index].title,
                                       description:
                                           snapshot.data[index].longdesc,
+                                      text: snapshot.data[index].text,
                                       imgurl: snapshot.data[index].imgurl,
                                       hero_id: "img${snapshot.data[index].id}",
                                     )));
@@ -218,11 +229,13 @@ class DetailPage extends StatelessWidget {
       required this.id,
       required this.title,
       required this.description,
+      required this.text,
       required this.imgurl,
       required this.hero_id});
 
   final String title;
   final String description;
+  final String text;
   final String imgurl;
   final String hero_id;
   final int id;
@@ -257,13 +270,34 @@ class DetailPage extends StatelessWidget {
                   alignment: const Alignment(-1, 0),
                   child: Text(title,
                       style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold))),
+                          fontSize: 38, fontWeight: FontWeight.bold))),
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding:  EdgeInsets.all(8.0),
+              child: Divider(),
             ),
           ),
           SliverToBoxAdapter(
             child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Text(description, style: const TextStyle(fontSize: 18))),
+                child: Text(description,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w300))),
+          ),
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Divider(),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Text(text,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.normal))),
           ),
           SliverToBoxAdapter(
               child: Padding(

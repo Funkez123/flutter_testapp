@@ -12,20 +12,28 @@ class NewArticlePageState extends State<NewArticlePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: ListView(
 
-        children: const [
-          TextField(
- decoration: const InputDecoration(
-    border: UnderlineInputBorder(),
-    labelText: 'Enter your username',)
+          children: const [
 
-          )
-        ],
+              Card(
+                child: Center(child: Text("Artikel erstellen"))
 
+              ),
 
-
+              Card(
+            child: Padding(
+              padding: EdgeInsets.all(15.0),
+              child: TextField(
+           decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                labelText: 'Artikelname',)
+              ),
+            ),
+          ),]
+        ),
       ),
     );
   }

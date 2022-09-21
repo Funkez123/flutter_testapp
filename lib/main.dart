@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/services.dart';
 import 'favpage.dart';
+import 'package:onboarding/newarticle.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -96,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () {
               //Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const secondpage()));
+                  MaterialPageRoute(builder: (context) => const NewArticlePage()));
             },
           ),
           ListTile(

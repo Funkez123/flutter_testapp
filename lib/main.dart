@@ -288,7 +288,7 @@ class DetailPage extends StatelessWidget {
           ),
           const SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(20.0),
               child: Divider(),
             ),
           ),

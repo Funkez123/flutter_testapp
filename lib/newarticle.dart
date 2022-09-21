@@ -28,7 +28,7 @@ class NewArticlePageState extends State<NewArticlePage> {
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: TextField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                 border: UnderlineInputBorder(),
                 labelText: 'Artikelname',
               )),
@@ -38,7 +38,7 @@ class NewArticlePageState extends State<NewArticlePage> {
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: TextField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                 border: UnderlineInputBorder(),
                 labelText: 'Kurzbeschreibung',
               )),
@@ -48,7 +48,7 @@ class NewArticlePageState extends State<NewArticlePage> {
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: TextField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                 border: UnderlineInputBorder(),
                 labelText: 'Beschreibung',
               )),
@@ -58,7 +58,7 @@ class NewArticlePageState extends State<NewArticlePage> {
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: TextField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                 border: UnderlineInputBorder(),
                 labelText: 'Artikelinhalt',
               )),
@@ -68,17 +68,17 @@ class NewArticlePageState extends State<NewArticlePage> {
             child: Padding(
               padding: EdgeInsets.all(15.0),
               child: TextField(
-                  decoration: const InputDecoration(
+                  decoration:  InputDecoration(
                 border: UnderlineInputBorder(),
                 labelText: 'Inhalt',
               )),
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
               child: TextButton(
                   style : TextButton.styleFrom(backgroundColor: Colors.black),
-                  onPressed: () {}, child: Text("Artikel veröffentlichen",style: TextStyle(color: Colors.white))))
+                  onPressed: () {}, child: const Text("Artikel veröffentlichen",style: TextStyle(color: Colors.white))))
         ]),
       ),
     );

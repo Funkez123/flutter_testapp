@@ -57,91 +57,98 @@ class _favpageState extends State<favpage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      body: FutureBuilder(
-              future: getJson(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.data == null) {
-                  return const Center(child: Text("Loading"));
-                } else {
-                  return ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () async {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DetailPage(
-                                          id: snapshot.data[index].id,
-                                          title: snapshot.data[index].title,
-                                          description:
-                                              snapshot.data[index].longdesc,
-                                          text: snapshot.data[index].text,
-                                          imgurl: snapshot.data[index].imgurl,
-                                          hero_id:
-                                              "img${snapshot.data[index].id}",
-                                        )));
-                          },
-                          child: Card(
-                              elevation: 2,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Column(
-                                  children: [
-                                Hero(
-                                    tag: "img${snapshot.data[index].id}",
-                                    child: Image.network(
-                                      snapshot.data[index].imgurl,
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent?
-                                              loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                                : null,
-                                          ),
-                                        );
-                                      },
-                                    )),
-                                Align(
-                                    alignment: const Alignment(-1, 0),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        snapshot.data[index].title,
-                                        style: const TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    )),
-                                const Divider(
-                                  thickness: 1,
-                                ),
-                                Align(
-                                    alignment: const Alignment(-1, 0),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        snapshot.data[index].shortdesc,
-                                        style: const TextStyle(fontSize: 18),
-                                      ),
-                                    )),
-                                  ],
-                                ),
-                              )),
-                        );
-                      });
-                }
-              }),
+      body: Scaffold(
+        appBar: AppBar( 
+          backgroundColor: Colors.white,
+          centerTitle: true,
+            title: Text("Favoriten")
+      ),
+        body: FutureBuilder(
+                future: getJson(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.data == null) {
+                    return const Center(child: Text("Loading"));
+                  } else {
+                    return ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () async {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DetailPage(
+                                            id: snapshot.data[index].id,
+                                            title: snapshot.data[index].title,
+                                            description:
+                                                snapshot.data[index].longdesc,
+                                            text: snapshot.data[index].text,
+                                            imgurl: snapshot.data[index].imgurl,
+                                            hero_id:
+                                                "img${snapshot.data[index].id}",
+                                          )));
+                            },
+                            child: Card(
+                                elevation: 2,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Column(
+                                    children: [
+                                  Hero(
+                                      tag: "img${snapshot.data[index].id}",
+                                      child: Image.network(
+                                        snapshot.data[index].imgurl,
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent?
+                                                loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value: loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          );
+                                        },
+                                      )),
+                                  Align(
+                                      alignment: const Alignment(-1, 0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          snapshot.data[index].title,
+                                          style: const TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )),
+                                  const Divider(
+                                    thickness: 1,
+                                  ),
+                                  Align(
+                                      alignment: const Alignment(-1, 0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          snapshot.data[index].shortdesc,
+                                          style: const TextStyle(fontSize: 18),
+                                        ),
+                                      )),
+                                    ],
+                                  ),
+                                )),
+                          );
+                        });
+                  }
+                }),
+      ),
     );
   }
 }

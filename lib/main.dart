@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:convert';
@@ -30,9 +29,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+        primarySwatch: Colors.grey,
       ),
-      home: const MyHomePage(title: 'Onboarding App'),
+      home: const MyHomePage(title: 'Übersicht'),
     );
   }
 }
@@ -68,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[100],
+      backgroundColor: Colors.white,
       drawer: Drawer(
           child: ListView(
         padding: EdgeInsets.zero,
@@ -86,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           ListTile(
-            title: const Text('Overview'),
+            title: const Text('Übersicht'),
             onTap: () {
               Navigator.pop(context);
             },
@@ -120,7 +119,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       )),
       appBar: AppBar(
-        backgroundColor: Colors.black54,
+        centerTitle: true,
+        backgroundColor: Colors.white,
         title: Text(widget.title),
       ),
       body: FutureBuilder(
@@ -147,62 +147,65 @@ class _MyHomePageState extends State<MyHomePage> {
                                       hero_id: "img${snapshot.data[index].id}",
                                     )));
                       },
-                      child: Card(
-                          color: Colors.white,
-                          elevation: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              children: [
-                                Hero(
-                                    tag: "img${snapshot.data[index].id}",
-                                    child: Image.network(
-                                      snapshot.data[index].imgurl,
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent? loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                                : null,
-                                          ),
-                                        );
-                                      },
-                                    )),
-                                Align(
-                                    alignment: const Alignment(-1, 0),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        snapshot.data[index].title,
-                                        style: const TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    )),
-                                const Divider(
-                                  thickness: 1,
-                                ),
-                                Align(
-                                    alignment: const Alignment(-1, 0),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        snapshot.data[index].shortdesc,
-                                        style: const TextStyle(fontSize: 18),
-                                      ),
-                                    )),
-                              ],
-                            ),
-                          )),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0, right: 10),
+                        child: Card(
+                            color: Colors.white,
+                            elevation: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Column(
+                                children: [
+                                  Hero(
+                                      tag: "img${snapshot.data[index].id}",
+                                      child: Image.network(
+                                        snapshot.data[index].imgurl,
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value: loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          );
+                                        },
+                                      )),
+                                  Align(
+                                      alignment: const Alignment(-1, 0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          snapshot.data[index].title,
+                                          style: const TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )),
+                                  const Divider(
+                                    thickness: 1,
+                                  ),
+                                  Align(
+                                      alignment: const Alignment(-1, 0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          snapshot.data[index].shortdesc,
+                                          style: const TextStyle(fontSize: 18),
+                                        ),
+                                      )),
+                                ],
+                              ),
+                            )),
+                      ),
                     );
                   });
             }
@@ -339,8 +342,8 @@ class DetailPage extends StatelessWidget {
 
           // Add your onPressed code here!
         },
-        backgroundColor: Colors.blueGrey,
-        child: const Icon(Icons.share),
+        backgroundColor: Colors.white,
+        child: const Icon(Icons.share, color: Colors.black,),
       ),
     );
   }
